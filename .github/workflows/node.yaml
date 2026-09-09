@@ -14,15 +14,16 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
 
       - name: install package
         run: npm install
 
       - name: run application
         run: |
-          node server.js &
-          sleep 5
-          curl http://localhost:3000
-          curl http://localhost:3000/health
-          pkill -f "node server.js"
+          node server.js dev &
+          SERVER_PID=$!
+          sleep 3
+          curl -v http://localhost:3000
+          curl -v http://localhost:3000/health
+          kill $SERVER_PID || true
