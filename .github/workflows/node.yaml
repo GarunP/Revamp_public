@@ -1,1 +1,28 @@
+name: node pipeline
 
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  node:
+    run-on: ["X64"]
+    steps:
+       - name: checkout code
+         uses: actions/checkout@v7
+
+        - name: setup node
+          uses: actions/setup-node@v7
+          with:
+            node-version: 24
+
+        - name: install package
+          run: npm install
+          
+        - name: run application
+          run: |  
+             node server.js &
+             sleep 5
+             curl http://localhost:3000
+             curl http://localhost:3000/health
+             pkill -f " node server.js"
